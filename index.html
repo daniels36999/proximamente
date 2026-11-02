@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Por un solo Guamote · Muy pronto</title>
+  <meta name="description" content="Estamos preparando este espacio. Muy pronto estará disponible.">
+  <meta name="robots" content="noindex, nofollow"> <!-- Borra esta línea el día del lanzamiento para que Google la encuentre -->
+  <meta name="theme-color" content="#001a5c">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23002787'/%3E%3Ccircle cx='32' cy='32' r='9' fill='%23f49c24'/%3E%3Ccircle cx='32' cy='32' r='18' fill='none' stroke='%23fff' stroke-width='3' opacity='.8'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital@1&family=Montserrat:wght@500;700;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --azul: #002787; --hondo: #001245; --naranja: #f49c24; --blanco: #fff;
+      --ease: cubic-bezier(.23, 1, .32, 1);
+    }
+    * { box-sizing: border-box; margin: 0; }
+    html, body { height: 100%; }
+    body {
+      font-family: 'Montserrat', system-ui, 'Segoe UI', sans-serif; color: var(--blanco);
+      background: radial-gradient(120% 90% at 50% 0%, #0a3bb0 0%, var(--azul) 45%, var(--hondo) 100%);
+      min-height: 100dvh; display: grid; place-items: center; overflow-x: hidden;
+      padding: max(24px, env(safe-area-inset-top)) max(20px, env(safe-area-inset-right)) max(24px, env(safe-area-inset-bottom)) max(20px, env(safe-area-inset-left));
+      -webkit-font-smoothing: antialiased; position: relative; isolation: isolate;
+    }
+    /* patrón de sol muy suave */
+    body::before {
+      content: ""; position: fixed; inset: 0; z-index: -2; opacity: .9;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140' viewBox='0 0 140 140'%3E%3Cg fill='none' stroke='%23ffffff' stroke-opacity='.06' stroke-width='1.4'%3E%3Ccircle cx='70' cy='70' r='13'/%3E%3Ccircle cx='70' cy='70' r='22'/%3E%3Cpath d='M70 36v10M70 94v10M36 70h10M94 70h10M46 46l7 7M87 87l7 7M94 46l-7 7M53 87l-7 7'/%3E%3C/g%3E%3C/svg%3E");
+      background-size: 140px;
+    }
+    /* sol grande detrás del texto */
+    .sol { position: fixed; left: 50%; top: 50%; width: min(120vmin, 900px); aspect-ratio: 1; margin: calc(min(120vmin, 900px) / -2) 0 0 calc(min(120vmin, 900px) / -2); z-index: -1; pointer-events: none; will-change: transform; }
+    .sol svg { width: 100%; height: 100%; display: block; animation: giro 120s linear infinite; }
+    .sol::after { content: ""; position: absolute; inset: 28%; border-radius: 50%; background: radial-gradient(circle, rgba(244,156,36,.32), transparent 68%); animation: respira 6s ease-in-out infinite; }
+    main { text-align: center; display: grid; justify-items: center; gap: clamp(14px, 2.4vh, 22px); max-width: 720px; width: 100%; padding-block: 8px 28px; }
+    .paso { opacity: 0; transform: translateY(16px); animation: sube 800ms var(--ease) forwards; animation-delay: calc(var(--i) * 110ms + 150ms); }
+    .pildora { display: inline-flex; align-items: center; gap: 10px; padding: 8px 18px; border-radius: 999px; font-weight: 700; font-size: .8rem; letter-spacing: .16em; text-transform: uppercase; background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.22); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); }
+    .punto { width: 9px; height: 9px; border-radius: 50%; background: var(--naranja); box-shadow: 0 0 0 0 rgba(244,156,36,.6); animation: pulso 2s var(--ease) infinite; }
+    h1 { font-weight: 900; letter-spacing: -0.045em; line-height: .98; font-size: clamp(2.6rem, 10.5vw, 6rem); text-wrap: balance; }
+    h1 span { color: var(--naranja); }
+    .texto { font-family: 'Lora', Georgia, serif; font-style: italic; font-size: clamp(1.05rem, 2.6vw, 1.35rem); color: #dbe6ff; max-width: 34ch; line-height: 1.55; }
+    /* barra de "preparando" */
+    .barra { width: min(280px, 70vw); height: 4px; border-radius: 4px; background: rgba(255,255,255,.16); overflow: hidden; }
+    .barra i { display: block; height: 100%; width: 40%; border-radius: 4px; background: linear-gradient(90deg, var(--naranja), #ffd27a); animation: carga 2.4s var(--ease) infinite; }
+    /* reloj de cuenta regresiva: anillos de progreso */
+    .meta { font-weight: 700; font-size: .8rem; letter-spacing: .14em; text-transform: uppercase; color: #bcd0ff; }
+    .meta b { color: var(--naranja); }
+    .reloj { display: none; gap: clamp(8px, 2.4vw, 18px); justify-content: center; }
+    .reloj.activo { display: flex; }
+    .anillo { position: relative; width: clamp(68px, 19vw, 104px); aspect-ratio: 1; display: grid; place-items: center; border-radius: 50%; background: rgba(255,255,255,.07); }
+    .anillo svg { position: absolute; inset: 0; width: 100%; height: 100%; transform: rotate(-90deg); }
+    .anillo circle { fill: none; stroke-width: 5; }
+    .anillo .pista { stroke: rgba(255,255,255,.14); }
+    .anillo .vale { stroke: var(--naranja); stroke-linecap: round; transition: stroke-dashoffset 900ms var(--ease); filter: drop-shadow(0 0 5px rgba(244,156,36,.55)); }
+    .anillo .vale.sin { transition: none; }
+    .anillo div { display: grid; gap: 1px; line-height: 1; }
+    .anillo b { font-size: clamp(1.35rem, 5.6vw, 2.15rem); font-weight: 900; letter-spacing: -0.04em; font-variant-numeric: tabular-nums; }
+    .anillo small { font-size: clamp(.5rem, 1.9vw, .62rem); letter-spacing: .12em; text-transform: uppercase; color: #bcd0ff; font-weight: 700; }
+    .llego { display: none; font-weight: 900; font-size: clamp(1.4rem, 5vw, 2rem); color: var(--naranja); letter-spacing: -0.02em; }
+    .llego.activo { display: block; }
+
+    /* invitación a la sede */
+    .invita { display: grid; grid-template-columns: auto 1fr; gap: 14px; align-items: center; text-align: left; max-width: 520px; padding: 16px 20px; border-radius: 20px; background: rgba(255,255,255,.09); border: 1px solid rgba(255,255,255,.2); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+    .invita .pin { width: 46px; height: 46px; border-radius: 14px; background: var(--naranja); color: #1a0f00; display: grid; place-items: center; }
+    .invita strong { display: block; font-size: 1rem; line-height: 1.3; letter-spacing: -0.01em; }
+    .invita span { display: block; margin-top: 4px; font-family: 'Lora', Georgia, serif; font-style: italic; font-size: .98rem; color: #dbe6ff; line-height: 1.45; }
+
+    /* redes */
+    .redes { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
+    .red { display: inline-flex; align-items: center; gap: 10px; min-height: 46px; padding: 0 20px 0 14px; border-radius: 999px; color: #fff; text-decoration: none; font-weight: 700; font-size: .92rem; background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.24); transition: transform 160ms var(--ease), background-color 160ms var(--ease), border-color 160ms var(--ease); -webkit-tap-highlight-color: transparent; }
+    .red:active { transform: scale(.97); }
+    .red svg { width: 22px; height: 22px; fill: currentColor; flex: none; }
+    @media (hover: hover) and (pointer: fine) { .red:hover { background: rgba(255,255,255,.2); border-color: #fff; transform: translateY(-2px); } }
+    .red:focus-visible { outline: 3px solid var(--naranja); outline-offset: 3px; }
+    footer { margin-top: 6px; font-size: .78rem; font-weight: 600; letter-spacing: .06em; color: #9fb6f5; }
+    @keyframes sube { to { opacity: 1; transform: none; } }
+    @keyframes giro { to { transform: rotate(360deg); } }
+    @keyframes respira { 0%, 100% { opacity: .55; transform: scale(.96); } 50% { opacity: 1; transform: scale(1.04); } }
+    @keyframes pulso { 70% { box-shadow: 0 0 0 10px rgba(244,156,36,0); } 100% { box-shadow: 0 0 0 0 rgba(244,156,36,0); } }
+    @keyframes carga { 0% { transform: translateX(-110%); } 100% { transform: translateX(290%); } }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: 1ms !important; animation-delay: 0ms !important; animation-iteration-count: 1 !important; }
+      .paso { opacity: 1; transform: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="sol" id="sol" aria-hidden="true">
+    <svg viewBox="0 0 400 400" fill="none" stroke="#fff" stroke-linecap="round">
+      <g stroke-opacity=".16" stroke-width="1.5">
+        <circle cx="200" cy="200" r="60"/><circle cx="200" cy="200" r="100"/><circle cx="200" cy="200" r="150"/><circle cx="200" cy="200" r="195" stroke-dasharray="2 9"/>
+      </g>
+      <g stroke-opacity=".28" stroke-width="2">
+        <path d="M200 20v34M200 346v34M20 200h34M346 200h34M72 72l24 24M304 304l24 24M328 72l-24 24M96 304l-24 24"/>
+      </g>
+      <g stroke-opacity=".14" stroke-width="1.5">
+        <path d="M200 44v18M200 338v18M44 200h18M338 200h18M110 34l8 16M282 350l8 16M366 110l-16 8M50 282l-16 8M290 34l-8 16M118 350l-8 16M366 290l-16-8M50 118l-16-8"/>
+      </g>
+    </svg>
+  </div>
+
+  <main>
+    <span class="pildora paso" style="--i:0"><span class="punto"></span>Muy pronto</span>
+    <h1 class="paso" style="--i:1">Por un solo <span>Guamote</span></h1>
+    <p class="texto paso" style="--i:2">Estamos preparando este espacio. Muy pronto podrás visitarlo.</p>
+    <div class="barra paso" style="--i:3" role="img" aria-label="Preparando el sitio"><i></i></div>
+    <p class="meta paso" style="--i:4" id="meta">Faltan para el <b>12 de noviembre</b></p>
+    <div class="reloj paso" style="--i:5" id="reloj" role="timer" aria-label="Cuenta regresiva">
+      <div class="anillo"><svg viewBox="0 0 100 100"><circle class="pista" cx="50" cy="50" r="45"/><circle class="vale" id="rd" cx="50" cy="50" r="45"/></svg><div><b id="d">00</b><small>días</small></div></div>
+      <div class="anillo"><svg viewBox="0 0 100 100"><circle class="pista" cx="50" cy="50" r="45"/><circle class="vale" id="rh" cx="50" cy="50" r="45"/></svg><div><b id="h">00</b><small>horas</small></div></div>
+      <div class="anillo"><svg viewBox="0 0 100 100"><circle class="pista" cx="50" cy="50" r="45"/><circle class="vale" id="rm" cx="50" cy="50" r="45"/></svg><div><b id="m">00</b><small>min</small></div></div>
+      <div class="anillo"><svg viewBox="0 0 100 100"><circle class="pista" cx="50" cy="50" r="45"/><circle class="vale" id="rs" cx="50" cy="50" r="45"/></svg><div><b id="s">00</b><small>seg</small></div></div>
+    </div>
+    <p class="llego paso" id="llego" style="--i:5">¡Hoy empezamos!</p>
+
+    <div class="invita paso" style="--i:6">
+      <span class="pin" aria-hidden="true"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg></span>
+      <p><strong>Te invitamos a nuestra sede cantonal de Pachakutik en Guamote</strong><span>Ven a conversar y a compartir tus propuestas: te escuchamos.</span></p>
+    </div>
+
+    <nav class="redes paso" style="--i:7" aria-label="Redes sociales">
+      <a class="red" id="fb" href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 12a10 10 0 1 0-11.56 9.88v-6.99H7.9V12h2.54V9.8c0-2.5 1.49-3.89 3.77-3.89 1.09 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56V12h2.78l-.44 2.89h-2.34v6.99A10 10 0 0 0 22 12z"/></svg>Facebook</a>
+      <a class="red" id="tt" href="https://www.tiktok.com/" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16.6 5.82A4.28 4.28 0 0 1 15.54 3h-3.09v12.4a2.59 2.59 0 0 1-2.59 2.5c-1.42 0-2.6-1.16-2.6-2.6 0-1.72 1.66-3.01 3.37-2.48V9.66c-3.45-.46-6.47 2.22-6.47 5.64 0 3.33 2.76 5.7 5.69 5.7 3.14 0 5.69-2.55 5.69-5.7V9.4a7.35 7.35 0 0 0 4.3 1.38V7.79s-1.88.09-3.24-1.97z"/></svg>TikTok</a>
+    </nav>
+
+    <footer>www.porunsologuamote.com</footer>
+  </main>
+
+  <script>
+    // ----------------------------------------------------------------------
+    //  CONFIGURACIÓN (lo único que quizá quieras cambiar)
+    //  FECHA   : día y hora de inicio, hora de Ecuador. Formato 'AAAA-MM-DDTHH:MM'
+    //            Déjala vacía ('') para ocultar el reloj.
+    //  INICIO  : desde cuándo se mide el avance del anillo de días (solo visual)
+    //  FACEBOOK / TIKTOK : enlaces de tus páginas (pega la dirección completa)
+    // ----------------------------------------------------------------------
+    var FECHA    = '2026-11-12T00:00';
+    var INICIO   = '2026-11-02T00:00';
+    var FACEBOOK = 'https://www.facebook.com/profile.php?id=100079741231636';   // CAMBIAR por el enlace real
+    var TIKTOK   = 'https://www.tiktok.com/@pachakutikguamote';     // CAMBIAR por el enlace real
+
+    (function () {
+      var reducir = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+      var $ = function (id) { return document.getElementById(id); };
+      $('fb').href = FACEBOOK; $('tt').href = TIKTOK;
+
+      // Reloj con anillos
+      if (FECHA) {
+        var meta = new Date(FECHA + ':00-05:00').getTime();
+        var ini = new Date(INICIO + ':00-05:00').getTime();
+        var total = Math.max(1, meta - ini);
+        var L = 2 * Math.PI * 45;
+        var anillos = { d: $('rd'), h: $('rh'), m: $('rm'), s: $('rs') };
+        Object.keys(anillos).forEach(function (k) { anillos[k].style.strokeDasharray = L; anillos[k].style.strokeDashoffset = L; });
+        var pad = function (n) { return String(n).padStart(2, '0'); };
+        var previo = 60;
+        var poner = function (k, valor, max) { anillos[k].style.strokeDashoffset = (L * (1 - valor / max)).toFixed(2); };
+        var tic = function () {
+          var f = Math.max(0, meta - Date.now());
+          var d = Math.floor(f / 864e5), h = Math.floor(f / 36e5) % 24, m = Math.floor(f / 6e4) % 60, sg = Math.floor(f / 1e3) % 60;
+          $('d').textContent = pad(d); $('h').textContent = pad(h); $('m').textContent = pad(m); $('s').textContent = pad(sg);
+          poner('d', f, total); poner('h', h + m / 60, 24); poner('m', m + sg / 60, 60);
+          // el anillo de segundos no "rebobina" al pasar de 0 a 59
+          var rs = anillos.s; rs.classList.toggle('sin', sg > previo); poner('s', sg + 1, 60); previo = sg;
+          if (f === 0) { $('reloj').classList.remove('activo'); $('meta').style.display = 'none'; $('llego').classList.add('activo'); clearInterval(reloj); }
+        };
+        var reloj;
+        if (!isNaN(meta)) { $('reloj').classList.add('activo'); tic(); reloj = setInterval(tic, 1000); } else { $('meta').style.display = 'none'; }
+      } else { $('meta').style.display = 'none'; }
+
+      // El sol sigue suavemente el puntero (solo transform; apagado si reduces movimiento)
+      if (!reducir && matchMedia('(hover: hover) and (pointer: fine)').matches) {
+        var sol = document.getElementById('sol'), x = 0, y = 0, tx = 0, ty = 0, raf = 0;
+        var anima = function () {
+          x += (tx - x) * 0.06; y += (ty - y) * 0.06;
+          sol.style.transform = 'translate3d(' + x.toFixed(2) + 'px,' + y.toFixed(2) + 'px,0)';
+          raf = (Math.abs(tx - x) + Math.abs(ty - y) > 0.05) ? requestAnimationFrame(anima) : 0;
+        };
+        addEventListener('pointermove', function (e) {
+          tx = (e.clientX / innerWidth - 0.5) * -28; ty = (e.clientY / innerHeight - 0.5) * -28;
+          if (!raf) raf = requestAnimationFrame(anima);
+        }, { passive: true });
+      }
+    })();
+  </script>
+</body>
+</html>

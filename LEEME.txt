@@ -1,0 +1,23 @@
+PÁGINA "MUY PRONTO"  ·  www.porunsologuamote.com
+
+Archivos (sube TODOS a la raíz del repositorio):
+  index.html   la página
+  404.html     igual a index.html: cualquier dirección (/cebadas/, /palmira/…) muestra "Muy pronto"
+  CNAME        tu dominio
+  .nojekyll    (archivo vacío, evita procesos innecesarios)
+
+SUBIR A GITHUB PAGES
+1. Crea un repositorio (o usa uno vacío) y sube estos 4 archivos a la rama main.
+2. Settings > Pages > Build and deployment > Source: "Deploy from a branch" > Branch: main / (root) > Save.
+3. En Custom domain pon www.porunsologuamote.com y activa "Enforce HTTPS" cuando aparezca.
+
+OPCIONES
+- Reloj: ya está puesto para el 12 de noviembre de 2026 a las 00:00 (hora de Ecuador). Para cambiarlo, abre index.html y edita  var FECHA  (y  var INICIO ). Si la dejas vacía ('') el reloj se oculta.
+- Redes: en index.html busca  var FACEBOOK  y  var TIKTOK  y pega tus enlaces reales. Hoy apuntan a la portada de cada red.
+- Al llegar la fecha, el reloj cambia solo a "¡Hoy empezamos!".
+- La página tiene "noindex": Google no la muestra. Borra esa línea el día del lanzamiento.
+
+EL DÍA DEL LANZAMIENTO
+1. Sube el proyecto completo (el de React) a este repositorio.
+2. Settings > Pages > Source: cambia a "GitHub Actions".
+3. Borra la línea noindex si quedó en algún archivo y listo.
